@@ -79,7 +79,7 @@ describe('Sales Controller tests', () => {
       it('Response json should return error message "Sales not found"', async () => {
         await SalesController.getAll(request, response, next);
 
-        expect(response.json.calledWith(getAllResponse.message)).to.be.true;
+        expect(response.json.calledWith({ message: getAllResponse.message })).to.be.true;
       });
     });
   });
@@ -150,7 +150,7 @@ describe('Sales Controller tests', () => {
       it('Response json should return error message "Sale not found"', async () => {
         await SalesController.getById(request, response, next);
 
-        expect(response.json.calledWith(getByIdResponse.message)).to.be.true;
+        expect(response.json.calledWith({ message: getByIdResponse.message })).to.be.true;
       });
     });
   });

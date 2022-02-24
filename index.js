@@ -2,7 +2,7 @@ require('dotenv').config();
 require('express-async-errors');
 const express = require('express');
 
-const { productsRoutes } = require('./routes');
+const { productsRoutes, salesRoutes } = require('./routes');
 
 const app = express();
 
@@ -14,6 +14,8 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/products', productsRoutes);
+
+app.use('/sales', salesRoutes);
 
 app.listen(process.env.PORT, () => {
   console.log(`Escutando na porta ${process.env.PORT}`);

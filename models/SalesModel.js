@@ -31,9 +31,9 @@ const getById = async (id) => {
     StoreManager.sales_products AS SP
   INNER JOIN
     StoreManager.sales AS S
+    ON S.id = SP.sale_id
   WHERE
     SP.sale_id = ?
-  ON S.id = SP.sale_id
   ORDER BY
     SP.sale_id, SP.sale_id;`;
 

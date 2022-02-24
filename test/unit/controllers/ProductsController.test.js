@@ -77,7 +77,7 @@ describe('Products Controller tests', () => {
       it('Response json should return error message "Products not found"', async () => {
         await ProductsController.getAll(request, response, next);
 
-        expect(response.json.calledWith(getAllResponse.message)).to.be.true;
+        expect(response.json.calledWith({ message: getAllResponse.message })).to.be.true;
       });
     });
   });
@@ -143,7 +143,7 @@ describe('Products Controller tests', () => {
       it('Response json should return error message "Product not found"', async () => {
         await ProductsController.getById(request, response, next);
 
-        expect(response.json.calledWith(getByIdResponse.message)).to.be.true;
+        expect(response.json.calledWith({ message: getByIdResponse.message })).to.be.true;
       });
     });
   });
