@@ -11,13 +11,13 @@ describe('Sales Model tests', () => {
         {
           "saleId": 1,
           "date": "2021-09-09T04:54:29.000Z",
-          "saleId": 1,
+          "productId": 1,
           "quantity": 2
         },
         {
           "saleId": 1,
           "date": "2021-09-09T04:54:54.000Z",
-          "saleId": 2,
+          "productId": 2,
           "quantity": 2
         }
       ]
@@ -45,11 +45,11 @@ describe('Sales Model tests', () => {
       expect(getAll[1]).to.be.an('object');
     });
 
-    it('Objects should have the following properties: "saleId", "date", "saleId", "quantity"', async () => {
+    it('Objects should have the following properties: "saleId", "date", "productId", "quantity"', async () => {
       const getAll = await SalesModel.getAll();
 
-      expect(getAll[0]).to.include.all.keys('saleId', 'date', 'saleId', 'quantity');
-      expect(getAll[1]).to.include.all.keys('saleId', 'date', 'saleId', 'quantity');
+      expect(getAll[0]).to.include.all.keys('saleId', 'date', 'productId', 'quantity');
+      expect(getAll[1]).to.include.all.keys('saleId', 'date', 'productId', 'quantity');
     });
   });
 
@@ -60,12 +60,12 @@ describe('Sales Model tests', () => {
         [
           {
             "date": "2021-09-09T04:54:29.000Z",
-            "saleId": 1,
+            "productId": 1,
             "quantity": 2
           },
           {
             "date": "2021-09-09T04:54:54.000Z",
-            "saleId": 2,
+            "productId": 2,
             "quantity": 2
           }
         ]
@@ -93,10 +93,10 @@ describe('Sales Model tests', () => {
         expect(sales[0]).to.be.an('object');
       });
   
-      it('Sale object should have the following properties: "saleId", "date", "saleId", "quantity"', async () => {
+      it('Sale object should have the following properties: "date", "productId", "quantity"', async () => {
         const sale = await SalesModel.getById(id);
   
-        expect(sale[0]).to.include.all.keys('saleId', 'date', 'saleId', 'quantity');
+        expect(sale[0]).to.include.all.keys('date', 'productId', 'quantity');
       });
   
       it('Sale object returned should be deep equal the sale searched', async () => {
