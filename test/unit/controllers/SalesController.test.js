@@ -1,10 +1,10 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 
-const { ProductsController } = require('../../../controllers');
-const { ProductsService } = require('../../../services');
+const { SalesController } = require('../../../controllers');
+const { SalesService } = require('../../../services');
 
-describe('Products Controller tests', () => {
+describe('Sales Controller tests', () => {
   const request = {};
   const response = {};
   let next = () => {};
@@ -15,133 +15,140 @@ describe('Products Controller tests', () => {
     next = sinon.stub().returns();
   });
 
-  describe('get all Products', () => {
-    describe('when all products are found', () => {
+  describe('get all Sales', () => {
+    describe('when all Sales are found', () => {
       const getAllResponse = {
         code: 200,
         data: [
           {
-            "id": 1,
-            "name": "produto A",
-            "quantity": 10
+            "saleId": 1,
+            "date": "2021-09-09T04:54:29.000Z",
+            "productId": 1,
+            "quantity": 2
           },
           {
-            "id": 2,
-            "name": "produto B",
-            "quantity": 20
+            "saleId": 1,
+            "date": "2021-09-09T04:54:54.000Z",
+            "productId": 2,
+            "quantity": 2
           }
         ],
       };
 
       before(() => {
-        sinon.stub(ProductsService, 'getAll').resolves(getAllResponse);
+        sinon.stub(SalesService, 'getAll').resolves(getAllResponse);
       });
 
       after(() => {
-        ProductsService.getAll.restore();
+        SalesService.getAll.restore();
       });
 
       it('Should respond with status code "200"', async () => {
-        await ProductsController.getAll(request, response, next);
+        await SalesController.getAll(request, response, next);
 
         expect(response.status.calledWith(getAllResponse.code)).to.be.true;
       });
 
       it('Response json should return expected data from database', async () => {
-        await ProductsController.getAll(request, response, next);
+        await SalesController.getAll(request, response, next);
 
         expect(response.json.calledWith(getAllResponse.data)).to.be.true;
       });
     });
 
-    describe('when all products are not found', () => {
+    describe('when all Sales are not found', () => {
       const getAllResponse = {
         code: 404,
-        message: 'Products not found',
+        message: 'Sales not found',
       };
 
       before(() => {
-        sinon.stub(ProductsService, 'getAll').resolves(getAllResponse);
+        sinon.stub(SalesService, 'getAll').resolves(getAllResponse);
       });
 
       after(() => {
-        ProductsService.getAll.restore();
+        SalesService.getAll.restore();
       });
 
       it('Should respond with status code "404"', async () => {
-        await ProductsController.getAll(request, response, next);
+        await SalesController.getAll(request, response, next);
 
         expect(response.status.calledWith(getAllResponse.code)).to.be.true;
       });
 
-      it('Response json should return error message "Products not found"', async () => {
-        await ProductsController.getAll(request, response, next);
+      it('Response json should return error message "Sales not found"', async () => {
+        await SalesController.getAll(request, response, next);
 
         expect(response.json.calledWith(getAllResponse.message)).to.be.true;
       });
     });
   });
 
-  describe('get Product by ID', () => {
+  describe('get Sales by ID', () => {
     describe('When response returns the Product', () => {
       const id = 1;
       const getByIdResponse = {
         code: 200,
         data: [
           {
-            "id": 1,
-            "name": "produto A",
-            "quantity": 10
+            "date": "2021-09-09T04:54:29.000Z",
+            "productId": 1,
+            "quantity": 2
           },
+          {
+            "date": "2021-09-09T04:54:54.000Z",
+            "productId": 2,
+            "quantity": 2
+          }
         ],
       };
 
       before(() => {
         request.params = { id };
-        sinon.stub(ProductsService, 'getById').resolves(getByIdResponse);
+        sinon.stub(SalesService, 'getById').resolves(getByIdResponse);
       });
 
       after(() => {
-        ProductsService.getById.restore();
+        SalesService.getById.restore();
       });
 
       it('Should respond with status code "200"', async () => {
-        await ProductsController.getById(request, response, next);
+        await SalesController.getById(request, response, next);
 
         expect(response.status.calledWith(getByIdResponse.code)).to.be.true;
       });
 
       it('Response json should return expected data from database', async () => {
-        await ProductsController.getById(request, response, next);
+        await SalesController.getById(request, response, next);
 
         expect(response.json.calledWith(getByIdResponse.data)).to.be.true;
       });
     });
 
-    describe('When the product is not found', () => {
-      const id = 6;
+    describe('When the sale is not found', () => {
+      const id = 10;
       const getByIdResponse = {
         code: 404,
-        message: 'Product not found',
+        message: 'Sale not found',
       };
 
       before(() => {
         request.params = { id };
-        sinon.stub(ProductsService, 'getById').resolves(getByIdResponse);
+        sinon.stub(SalesService, 'getById').resolves(getByIdResponse);
       });
 
       after(() => {
-        ProductsService.getById.restore();
+        SalesService.getById.restore();
       });
 
       it('Should respond with status code "404"', async () => {
-        await ProductsController.getById(request, response, next);
+        await SalesController.getById(request, response, next);
 
         expect(response.status.calledWith(getByIdResponse.code)).to.be.true;
       });
 
-      it('Response json should return error message "Product not found"', async () => {
-        await ProductsController.getById(request, response, next);
+      it('Response json should return error message "Sale not found"', async () => {
+        await SalesController.getById(request, response, next);
 
         expect(response.json.calledWith(getByIdResponse.message)).to.be.true;
       });
