@@ -1,9 +1,19 @@
 const ProductsModel = require('../models/ProductsModel');
 
 const getAll = async () => {
-  const modelResponse = await ProductsModel.getAll();
+  const result = await ProductsModel.getAll();
 
-  return modelResponse;
+  if (result.length === 0) {
+    return {
+      code: 404,
+      message: 'Products not found',
+    };
+  }
+
+  return {
+    code: 200,
+    data: result,
+  };
 };
 
 const getById = async (id) => {
