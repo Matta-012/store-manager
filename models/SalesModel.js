@@ -1,3 +1,4 @@
+const camelcaseKeys = require('camelcase-keys');
 const connection = require('./connection');
 
 const getAll = async () => {
@@ -17,13 +18,13 @@ const getAll = async () => {
 
   const [result] = await connection.execute(query);
 
-  return result;
+  const serialize = camelcaseKeys(result);
+  return serialize;
 };
 
 const getById = async (id) => {
   const query = `
   SELECT
-    SP.sale_id,
     SP.product_id,
     SP.quantity,
     S.date
@@ -39,7 +40,8 @@ const getById = async (id) => {
 
   const [result] = await connection.execute(query, [id]);
 
-  return result;
+  const serialize = camelcaseKeys(result);
+  return serialize;
 };
 
 module.exports = {
