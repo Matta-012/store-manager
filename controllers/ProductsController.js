@@ -8,6 +8,17 @@ const getAll = async (_req, res) => {
   return res.status(result.code).json(result.data);
 };
 
+const getById = async (req, res) => {
+  const { id } = req.params;
+
+  const result = await ProductsService.getById(Number(id));
+
+  if (result.message) return res.status(result.code).json(result.message);
+
+  return res.status(result.code).json(result.data);
+};
+
 module.exports = {
   getAll,
+  getById,
 };
