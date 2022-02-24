@@ -19,7 +19,17 @@ const getAll = async () => {
 const getById = async (id) => {
   const result = await ProductsModel.getById(id);
 
-  return result;
+  if (result.length === 0) {
+    return {
+      code: 404,
+      message: 'Product not found',
+    };
+  }
+
+  return {
+    code: 200,
+    data: result,
+  };
 };
 
 module.exports = {
