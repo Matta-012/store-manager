@@ -112,7 +112,7 @@ describe('Products Controller tests', () => {
       });
 
       it('Response json should return expected data from database', async () => {
-        await ProductsController.getAll(request, response, next);
+        await ProductsController.getById(request, response, next);
 
         expect(response.json.calledWith(getByIdResponse.data)).to.be.true;
       });
@@ -135,13 +135,13 @@ describe('Products Controller tests', () => {
       });
 
       it('Should respond with status code "404"', async () => {
-        await ProductsController.getAll(request, response, next);
+        await ProductsController.getById(request, response, next);
 
         expect(response.status.calledWith(getByIdResponse.code)).to.be.true;
       });
 
       it('Response json should return error message "Product not found"', async () => {
-        await ProductsController.getAll(request, response, next);
+        await ProductsController.getById(request, response, next);
 
         expect(response.json.calledWith(getByIdResponse.message)).to.be.true;
       });
