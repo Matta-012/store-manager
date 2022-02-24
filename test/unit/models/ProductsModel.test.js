@@ -111,10 +111,10 @@ describe('Products Model tests', () => {
         connection.execute.restore();
       });
 
-      it('Should return "null"', async () => {
+      it('Should return an empty array', async () => {
         const product = await ProductsModel.getById(id);
 
-        expect(product).to.be.equal(null);
+        expect(product).to.be.empty;
       });
     });
   });
