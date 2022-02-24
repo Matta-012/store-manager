@@ -7,6 +7,7 @@ const { ProductsService } = require('../../../services');
 describe('Products Controller tests', () => {
   const request = {};
   const response = {};
+  let next = () => {};
 
   before(() => {
     response.status = sinon.stub().returns(response);
@@ -38,13 +39,13 @@ describe('Products Controller tests', () => {
       ProductsService.getAll.restore();
     });
 
-    it('Response status code is 200', async () => {
+    it('Should respond with status code 200', async () => {
       await ProductsController.getAll(request, response, next);
 
       expect(response.status.calledWith(200)).to.be.true;
     });
 
-    it('Response json returns expected data from database', async () => {
+    it('Response json should return expected data from database', async () => {
       await ProductsController.getAll(request, response, next);
 
       expect(response.json.calledWith(getAllResponse)).to.be.true;
