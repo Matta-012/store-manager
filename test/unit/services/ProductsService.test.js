@@ -1,13 +1,13 @@
 const sinon = require('sinon');
 const { expect } = require('chai');
 
-const connection = require('../../../models/connection');
+const { ProductsModel } = require('../../../models');
 const { ProductsService } = require('../../../services');
 
 describe('Products Service tests', () => {
   describe('get all Products', () => {
-    const getAllResponse = [
-      [
+    describe('when response returns all products', () => {
+      const getAllResponse = [
         {
           "id": 1,
           "name": "produto A",
@@ -18,36 +18,66 @@ describe('Products Service tests', () => {
           "name": "produto B",
           "quantity": 20
         }
-      ]
-    ];
-
-    before(() => {
-      sinon.stub(connection, 'execute').resolves(getAllResponse);
+      ];
+  
+      before(() => {
+        sinon.stub(ProductsModel, 'getAll').resolves(getAllResponse);
+      });
+  
+      after(() => {
+        ProductsModel.getAll.restore();
+      });
+  
+      it('Should return an array not empty', async () => {
+        const getAll = await ProductsService.getAll();
+  
+        expect(getAll.data).to.be.an('array');
+        expect(getAll.data).to.be.not.empty;
+      });
+  
+      it('Should return an array of objects', async () => {
+        const getAll = await ProductsService.getAll();
+  
+        expect(getAll.data[0]).to.be.an('object');
+        expect(getAll.data[1]).to.be.an('object');
+      });
+  
+      it('Should return status code "200"', async () => {
+        const getAll = await ProductsService.getAll();
+  
+        expect(getAll.code).to.be.equal(200);
+      });
+  
+      it('Objects should have the following properties: "id", "name", "quantity"', async () => {
+        const getAll = await ProductsService.getAll();
+  
+        expect(getAll.data[0]).to.include.all.keys('id', 'name', 'quantity');
+        expect(getAll.data[1]).to.include.all.keys('id', 'name', 'quantity');
+      });
     });
 
-    after(() => {
-      connection.execute.restore();
-    });
+    describe('when products are not found', () => {
+      const getAllResponse = [];
+  
+      before(() => {
+        sinon.stub(ProductsModel, 'getAll').resolves(getAllResponse);
+      });
+  
+      after(() => {
+        ProductsModel.getAll.restore();
+      });
 
-    it('Should return an array not empty', async () => {
-      const getAll = await ProductsService.getAll();
+      it('Should return status code "404"', async () => {
+        const getAll = await ProductsService.getAll();
 
-      expect(getAll).to.be.an('array');
-      expect(getAll).to.be.not.empty;
-    });
+        expect(getAll.code).to.be.equal(404);
+      });
 
-    it('Should return an array of objects', async () => {
-      const getAll = await ProductsService.getAll();
+      it('Should return error message "Products not found"', async () => {
+        const getAll = await ProductsService.getAll();
 
-      expect(getAll[0]).to.be.an('object');
-      expect(getAll[1]).to.be.an('object');
-    });
-
-    it('Objects should have the following properties: "id", "name", "quantity"', async () => {
-      const getAll = await ProductsService.getAll();
-
-      expect(getAll[0]).to.include.all.keys('id', 'name', 'quantity');
-      expect(getAll[1]).to.include.all.keys('id', 'name', 'quantity');
+        expect(getAll.message).to.be.equal('Products not found');
+      });
     });
   });
 

@@ -11,7 +11,7 @@ const getById = async (id) => {
   const query = 'SELECT id, name, quantity FROM products WHERE id = ?;';
   const [result] = await connection.execute(query, [id]);
 
-  return result.length === 0 ? null : result;
+  return result;
 };
 
 module.exports = {
