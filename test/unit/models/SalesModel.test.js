@@ -53,7 +53,7 @@ describe('Sales Model tests', () => {
     });
   });
 
-  describe('get sale by ID', () => {
+  describe('get sales by ID', () => {
     describe('When the sale is found', () => {
       const id = 1;
       const getByIdResponse = [
@@ -106,7 +106,7 @@ describe('Sales Model tests', () => {
       });
     });
 
-    describe('When the sale is not found', () => {
+    describe('When the sale ID is not found', () => {
       const id = 10;
       const getByIdResponse = [[]];
   
