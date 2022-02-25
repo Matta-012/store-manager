@@ -44,26 +44,28 @@ const getById = async (id) => {
   return serialize;
 };
 
-const create = async ({ productId, quantity }) => {
-  const createSaleQuery = 'INSERT INTO StoreManager.sales (date) VALUES(now());';
-  const createSalesProducts = `
+const createSale = async () => {
+  const query = 'INSERT INTO StoreManager.sales (date) VALUES(now());';
+
+  const [{ insertId }] = await connection.execute(query);
+
+  return insertId;
+};
+
+const createSalesProducts = async ({ insertId, productId, quantity }) => {
+  const query = `
     INSERT INTO
       StoreManager.sales_products (sale_id, product_id, quantity)
     VALUES(?, ?, ?);`;
+  
+  await connection.execute(query, [insertId, productId, quantity]);
 
-  const [{ insertId }] = await connection.execute(createSaleQuery);
-  await connection.execute(
-    createSalesProducts,
-    [insertId, productId, quantity],
-  );
-
-  return {
-    id: insertId,
-  };
+  return {};
 };
 
 module.exports = {
   getAll,
   getById,
-  create,
+  createSale,
+  createSalesProducts,
 };
