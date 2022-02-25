@@ -17,6 +17,13 @@ const getById = async (id) => {
   return serialize[0];
 };
 
+const getByName = async (name) => {
+  const query = 'SELECT id, name, quantity FROM StoreManager.products WHERE name = ?;';
+  const [result] = await connection.execute(query, [name]);
+
+  return result.length < 1;
+};
+
 const create = async ({ name, quantity }) => {
   const query = 'INSERT INTO StoreManager.products (name, quantity) VALUES (?, ?);';
   const [result] = await connection.execute(query, [name, quantity]);
@@ -31,5 +38,6 @@ const create = async ({ name, quantity }) => {
 module.exports = {
   getAll,
   getById,
+  getByName,
   create,
 };

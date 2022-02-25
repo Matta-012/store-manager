@@ -18,7 +18,20 @@ const getById = async (req, res) => {
   return res.status(result.code).json(result.data);
 };
 
+const create = async (req, res) => {
+  const { name, quantity } = req.body;
+
+  const serviceResponse = await ProductsService.create({ name, quantity });
+
+  if (serviceResponse.message) {
+    return res.status(serviceResponse.code).json({ message: serviceResponse.message });
+  }
+
+  return res.status(serviceResponse.code).json(serviceResponse.data);
+};
+
 module.exports = {
   getAll,
   getById,
+  create,
 };
