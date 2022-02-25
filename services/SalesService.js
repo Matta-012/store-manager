@@ -32,7 +32,21 @@ const getById = async (id) => {
   };
 };
 
+const create = async (arrOfData) => {
+  const [{ insertId }] = await SalesModel.createSale();
+
+  arrOfData.forEach(async ({ productId, quantity }) => {
+    await SalesModel.createSalesProducts({ insertId, productId, quantity });
+  });
+
+  return {
+    id: insertId,
+    itemsSold: arrOfData,
+  };
+};
+
 module.exports = {
   getAll,
   getById,
+  create,
 };
