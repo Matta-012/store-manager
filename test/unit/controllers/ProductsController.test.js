@@ -147,4 +147,66 @@ describe('Products Controller tests', () => {
       });
     });
   });
+
+  describe('Create new Product', () => {
+    describe('When the new product is created', () => {
+      const controllerResponse = {
+        code: 201,
+        data: {
+          "id": 1,
+          "name": "produto A",
+          "quantity": 10
+        },
+      };
+
+      before(() => {
+        request.body = { "name": "produto A", "quantity": 10 };
+        sinon.stub(ProductsService, 'create').resolves(controllerResponse);
+      });
+
+      after(() => {
+        ProductsService.create.restore();
+      });
+
+      it('Should respond with status code "201"', async () => {
+        await ProductsController.create(request, response, next);
+
+        expect(response.status.calledWith(controllerResponse.code)).to.be.true;
+      });
+
+      it('Response json should return expected data from database', async () => {
+        await ProductsController.create(request, response, next);
+
+        expect(response.json.calledWith(controllerResponse.data)).to.be.true;
+      });
+    });
+
+    describe('When the new product already exists', () => {
+      const controllerResponse = {
+        code: 409,
+        message: 'Product already exists'
+      };
+
+      before(() => {
+        request.body = { "name": "produto A", "quantity": 10 };
+        sinon.stub(ProductsService, 'create').resolves(controllerResponse);
+      });
+
+      after(() => {
+        ProductsService.create.restore();
+      });
+
+      it('Should respond with status code "409"', async () => {
+        await ProductsController.create(request, response, next);
+
+        expect(response.status.calledWith(controllerResponse.code)).to.be.true;
+      });
+
+      it('Response json should return error message "Product already exists"', async () => {
+        await ProductsController.create(request, response, next);
+
+        expect(response.json.calledWith({ message: controllerResponse.message })).to.be.true;
+      });
+    });
+  });
 });
