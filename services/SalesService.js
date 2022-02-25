@@ -35,13 +35,23 @@ const getById = async (id) => {
 const create = async (arrOfData) => {
   const [{ insertId }] = await SalesModel.createSale();
 
+  if (typeof insertId !== 'number') {
+    return {
+      code: 400,
+      message: 'Bad request',
+    };
+  }
+
   arrOfData.forEach(async ({ productId, quantity }) => {
     await SalesModel.createSalesProducts({ insertId, productId, quantity });
   });
 
   return {
-    id: insertId,
-    itemsSold: arrOfData,
+    code: 201,
+    data: {
+      id: insertId,
+      itemsSold: arrOfData,
+    },
   };
 };
 
