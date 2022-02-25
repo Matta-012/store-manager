@@ -32,7 +32,26 @@ const getById = async (id) => {
   };
 };
 
+const create = async ({ name, quantity }) => {
+  const isNewProduct = await ProductsModel.getByName(name);
+
+  if (!isNewProduct) {
+    return {
+      code: 409,
+      message: 'Product already exists',
+    };
+  }
+
+  const result = await ProductsModel.create({ name, quantity });
+
+  return {
+    code: 201,
+    data: result,
+  };
+};
+
 module.exports = {
   getAll,
   getById,
+  create,
 };
