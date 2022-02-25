@@ -119,16 +119,13 @@ describe('Products Model tests', () => {
         },
       ];
 
-      const body = {
-        name: 'produto A',
-        quantity: 10,
-      };
-      const { name, quantity } = body;
+      const name = 'produto A';
+      const quantity = 10;
 
       before(() => {
         sinon.stub(connection, 'execute').resolves(createResponse);
       });
-  
+
       after(() => {
         connection.execute.restore();
       });

@@ -19,38 +19,38 @@ describe('Products Service tests', () => {
           "quantity": 20
         }
       ];
-  
+
       before(() => {
         sinon.stub(ProductsModel, 'getAll').resolves(getAllResponse);
       });
-  
+
       after(() => {
         ProductsModel.getAll.restore();
       });
-  
+
       it('Should return an array not empty', async () => {
         const getAll = await ProductsService.getAll();
-  
+
         expect(getAll.data).to.be.an('array');
         expect(getAll.data).to.be.not.empty;
       });
-  
+
       it('Should return an array of objects', async () => {
         const getAll = await ProductsService.getAll();
-  
+
         expect(getAll.data[0]).to.be.an('object');
         expect(getAll.data[1]).to.be.an('object');
       });
-  
+
       it('Should return status code "200"', async () => {
         const getAll = await ProductsService.getAll();
-  
+
         expect(getAll.code).to.be.equal(200);
       });
-  
+
       it('Objects should have the following properties: "id", "name", "quantity"', async () => {
         const getAll = await ProductsService.getAll();
-  
+
         expect(getAll.data[0]).to.include.all.keys('id', 'name', 'quantity');
         expect(getAll.data[1]).to.include.all.keys('id', 'name', 'quantity');
       });
@@ -161,6 +161,72 @@ describe('Products Service tests', () => {
         const product = await ProductsService.getById(id);
 
         expect(product.message).to.be.equal('Product not found');
+      });
+    });
+  });
+
+  describe('Create new Product', () => {
+    describe('When the new product is created', () => {
+      const createResponse = {
+        "id": 1,
+        "name": "produto A",
+        "quantity": 10
+      };
+
+      const name = 'produto A';
+      const quantity = 10;
+
+      before(() => {
+        sinon.stub(ProductsModel, 'create').resolves(createResponse);
+        sinon.stub(ProductsModel, 'getByName').resolves(true);
+      });
+
+      after(() => {
+        ProductsModel.create.restore();
+        ProductsModel.getByName.restore();
+      });
+
+      it('Should return status code "201"', async () => {
+        const serviceResponse = await ProductsService.create({ name, quantity });
+
+        expect(serviceResponse.code).to.be.equal(201);
+      });
+
+      it('Should return an object with the following keys: "code", "data"', async () => {
+        const serviceResponse = await ProductsService.create({ name, quantity });
+
+        expect(serviceResponse).to.include.all.keys('code', 'data');
+      });
+
+      it('Should return an object deep equal the product created', async () => {
+        const serviceResponse = await ProductsService.create({ name, quantity });
+
+        expect(serviceResponse.data).to.be.deep.equal(createResponse);
+      });
+    });
+
+    describe('When the product already exists', () => {
+      const name = 'produto A';
+      const quantity = 10;
+
+      before(() => {
+        sinon.stub(ProductsModel, 'getByName').resolves(false);
+      });
+
+      after(() => {
+        ProductsModel.getByName.restore();
+      });
+
+      it('Should return with status code "409"', async () => {
+        const serviceResponse = await ProductsService.create({ name, quantity });
+
+        expect(serviceResponse.code).to.be.equal(409);
+      });
+
+      it('Should return with error message "Product already exists"', async () => {
+        const serviceResponse = await ProductsService.create({ name, quantity });
+
+        expect(serviceResponse.message).to.be.equal('Product already exists');
       });
     });
   });
