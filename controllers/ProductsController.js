@@ -43,9 +43,22 @@ const update = async (req, res) => {
   return res.status(serviceResponse.code).json(serviceResponse.data);
 };
 
+const deleteProduct = async (req, res) => {
+  const { id } = req.params;
+
+  const serviceResponse = await ProductsService.deleteProduct(Number(id));
+
+  if (serviceResponse.message) {
+    return res.status(serviceResponse.code).json({ message: serviceResponse.message });
+  }
+
+  return res.status(serviceResponse.code).end();
+};
+
 module.exports = {
   getAll,
   getById,
   create,
   update,
+  deleteProduct,
 };
