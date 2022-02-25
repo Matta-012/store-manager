@@ -44,7 +44,26 @@ const getById = async (id) => {
   return serialize;
 };
 
+const create = async ({ productId, quantity }) => {
+  const createSaleQuery = 'INSERT INTO StoreManager.sales (date) VALUES(now());';
+  const createSalesProducts = `
+    INSERT INTO
+      StoreManager.sales_products (sale_id, product_id, quantity)
+    VALUES(?, ?, ?);`;
+
+  const [{ insertId }] = await connection.execute(createSaleQuery);
+  await connection.execute(
+    createSalesProducts,
+    [insertId, productId, quantity],
+  );
+
+  return {
+    id: insertId,
+  };
+};
+
 module.exports = {
   getAll,
   getById,
+  create,
 };
