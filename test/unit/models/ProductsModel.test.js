@@ -71,31 +71,23 @@ describe('Products Model tests', () => {
       after(() => {
         connection.execute.restore();
       });
-
-      it('Should return an array with one product', async () => {
+  
+      it('Should return an object', async () => {
         const product = await ProductsModel.getById(id);
   
-        expect(product).to.be.an('array');
-        expect(product).to.be.not.empty;
-        expect(product).to.be.have.length(1);
-      });
-  
-      it('Should return an array with an object', async () => {
-        const product = await ProductsModel.getById(id);
-  
-        expect(product[0]).to.be.an('object');
+        expect(product).to.be.an('object');
       });
   
       it('Product object should have the following properties: "id", "name", "quantity"', async () => {
         const product = await ProductsModel.getById(id);
   
-        expect(product[0]).to.include.all.keys('id', 'name', 'quantity');
+        expect(product).to.include.all.keys('id', 'name', 'quantity');
       });
   
       it('Product object returned should be deep equal the product searched', async () => {
         const product = await ProductsModel.getById(id);
 
-        expect(product).to.be.deep.equal(getByIdResponse[0]);
+        expect(product).to.be.deep.equal(getByIdResponse[0][0]);
       });
     });
 
@@ -111,10 +103,10 @@ describe('Products Model tests', () => {
         connection.execute.restore();
       });
 
-      it('Should return an empty array', async () => {
+      it('Should return undefined', async () => {
         const product = await ProductsModel.getById(id);
 
-        expect(product).to.be.empty;
+        expect(product).to.be.undefined;
       });
     });
   });

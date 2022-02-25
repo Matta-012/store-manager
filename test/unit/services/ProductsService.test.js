@@ -135,7 +135,7 @@ describe('Products Service tests', () => {
 
     describe('When the product is not found', () => {
       const id = 5;
-      const getByIdResponse = [];
+      const getByIdResponse = undefined;
   
       before(() => {
         sinon.stub(ProductsModel, 'getById').resolves(getByIdResponse);
@@ -148,7 +148,7 @@ describe('Products Service tests', () => {
       it('Should not return data', async () => {
         const product = await ProductsService.getById(id);
 
-        expect(!product.data).to.be.true;
+        expect(product.data).to.be.undefined;
       });
 
       it('Should return with status code "404"', async () => {
