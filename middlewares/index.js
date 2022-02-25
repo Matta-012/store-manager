@@ -1,5 +1,5 @@
-const productsCreate = require('./productsCreate');
+const validateNameAndQuantity = require('./validateNameAndQuantity');
 
 module.exports = {
-  productsCreate,
+  validateNameAndQuantity,
 };

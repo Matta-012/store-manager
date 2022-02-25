@@ -50,8 +50,22 @@ const create = async ({ name, quantity }) => {
   };
 };
 
+const update = async ({ id, name, quantity }) => {
+  const getProductById = await getById(id);
+
+  if (getProductById.code === 404) return getProductById;
+
+  const result = await ProductsModel.update({ id, name, quantity });
+
+  return {
+    code: 200,
+    data: result,
+  };
+};
+
 module.exports = {
   getAll,
   getById,
   create,
+  update,
 };

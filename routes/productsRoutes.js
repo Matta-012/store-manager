@@ -1,6 +1,6 @@
 const express = require('express');
 const ProductsController = require('../controllers/ProductsController');
-const { productsCreate } = require('../middlewares');
+const { validateNameAndQuantity } = require('../middlewares');
 
 const router = express.Router();
 
@@ -16,8 +16,14 @@ router.get(
 
 router.post(
   '/',
-  productsCreate,
+  validateNameAndQuantity,
   ProductsController.create,
+);
+
+router.put(
+  '/:id',
+  validateNameAndQuantity,
+  ProductsController.update,
 );
 
 module.exports = router;
