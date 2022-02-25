@@ -110,4 +110,40 @@ describe('Products Model tests', () => {
       });
     });
   });
+
+  describe('Create new Product', () => {
+    describe('When the new product is created', () => {
+      const createResponse = [
+        {
+          "insertId": 1,
+        },
+      ];
+
+      const body = {
+        name: 'produto A',
+        quantity: 10,
+      };
+      const { name, quantity } = body;
+
+      before(() => {
+        sinon.stub(connection, 'execute').resolves(createResponse);
+      });
+  
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('Should create a new product and return the following keys: "id", "name", "quantity"', async () => {
+        const modelResponse = await ProductsModel.create({ name, quantity });
+
+        expect(modelResponse).to.include.all.keys('id', 'name', 'quantity');
+      });
+
+      it('Created product should be deep equal the data entered', async () => {
+        const modelResponse = await ProductsModel.create({ name, quantity });
+
+        expect(modelResponse).to.be.deep.equal({ id: createResponse[0].insertId, name, quantity});
+      });
+    });
+  });
 });
