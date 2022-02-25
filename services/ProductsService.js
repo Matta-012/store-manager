@@ -51,11 +51,14 @@ const create = async ({ name, quantity }) => {
 };
 
 const update = async ({ id, name, quantity }) => {
-  const getProductById = await getById(id);
-
-  if (getProductById.code === 404) return getProductById;
-
   const result = await ProductsModel.update({ id, name, quantity });
+
+  if (result.affectedRows === 0) {
+    return {
+      code: 404,
+      message: 'Product not found',
+    };
+  }
 
   return {
     code: 200,
