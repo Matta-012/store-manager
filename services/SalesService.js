@@ -52,8 +52,28 @@ const create = async (sales) => {
   };
 };
 
+const update = async ({ saleId, productId, quantity }) => {
+  const result = await SalesModel.update({ saleId, productId, quantity });
+
+  if (!result) {
+    return {
+      code: 404,
+      message: 'Sale not found',
+    };
+  }
+
+  return {
+    code: 200,
+    data: {
+      saleId,
+      itemUpdated: [...result],
+    },
+  };
+};
+
 module.exports = {
   getAll,
   getById,
   create,
+  update,
 };
