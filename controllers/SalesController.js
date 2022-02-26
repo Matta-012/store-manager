@@ -32,8 +32,26 @@ const create = async (req, res) => {
   return res.status(serviceResponse.code).json(serviceResponse.data);
 };
 
+const update = async (req, res) => {
+  const { id } = req.params;
+
+  if (!req.body.length) {
+    return res.status(400).json({ message: 'Bad request' });
+  }
+
+  const { productId, quantity } = req.body[0];
+  const serviceResponse = await SalesService.update({ id, productId, quantity });
+
+  if (serviceResponse.message) {
+    return res.status(serviceResponse.code).json({ message: serviceResponse.message });
+  }
+
+  return res.status(serviceResponse.code).json(serviceResponse.data);
+};
+
 module.exports = {
   getAll,
   getById,
   create,
+  update,
 };
