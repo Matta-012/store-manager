@@ -32,25 +32,22 @@ const getById = async (id) => {
   };
 };
 
-const create = async (arrOfData) => {
-  const [{ insertId }] = await SalesModel.createSale();
+const create = async (sales) => {
+  const saleId = await SalesModel.createSale();
 
-  if (typeof insertId !== 'number') {
-    return {
-      code: 400,
-      message: 'Bad request',
-    };
+  if (typeof saleId !== 'number') {
+    return { code: 400, message: 'Bad request' };
   }
 
-  arrOfData.forEach(async ({ productId, quantity }) => {
-    await SalesModel.createSalesProducts({ insertId, productId, quantity });
+  sales.forEach(async ({ productId, quantity }) => {
+    await SalesModel.createSalesProducts({ saleId, productId, quantity });
   });
 
   return {
     code: 201,
     data: {
-      id: insertId,
-      itemsSold: arrOfData,
+      id: saleId,
+      itemsSold: sales,
     },
   };
 };

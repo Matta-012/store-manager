@@ -1,5 +1,6 @@
 const express = require('express');
 const SalesController = require('../controllers/SalesController');
+const { validateProductIdAndQuantity } = require('../middlewares');
 
 const router = express.Router();
 
@@ -11,6 +12,12 @@ router.get(
 router.get(
   '/:id',
   SalesController.getById,
+);
+
+router.post(
+  '/',
+  validateProductIdAndQuantity,
+  SalesController.create,
 );
 
 module.exports = router;

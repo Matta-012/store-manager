@@ -52,13 +52,13 @@ const createSale = async () => {
   return insertId;
 };
 
-const createSalesProducts = async ({ insertId, productId, quantity }) => {
+const createSalesProducts = async ({ saleId, productId, quantity }) => {
   const query = `
     INSERT INTO
       StoreManager.sales_products (sale_id, product_id, quantity)
     VALUES(?, ?, ?);`;
   
-  await connection.execute(query, [insertId, productId, quantity]);
+  await connection.execute(query, [saleId, productId, quantity]);
 
   return {};
 };

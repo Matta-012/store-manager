@@ -18,7 +18,22 @@ const getById = async (req, res) => {
   return res.status(result.code).json(result.data);
 };
 
+const create = async (req, res) => {
+  if (!req.body.length) {
+    return res.status(400).json({ message: 'Bad request' });
+  }
+
+  const serviceResponse = await SalesService.create(req.body);
+
+  if (serviceResponse.message) {
+    return res.status(serviceResponse.code).json({ message: serviceResponse.message });
+  }
+
+  return res.status(serviceResponse.code).json(serviceResponse.data);
+};
+
 module.exports = {
   getAll,
   getById,
+  create,
 };
