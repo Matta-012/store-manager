@@ -52,8 +52,8 @@ const create = async (sales) => {
   };
 };
 
-const update = async ({ saleId, productId, quantity }) => {
-  const result = await SalesModel.update({ saleId, productId, quantity });
+const update = async ({ id, productId, quantity }) => {
+  const result = await SalesModel.update({ id, productId, quantity });
 
   if (!result) {
     return {
@@ -65,8 +65,8 @@ const update = async ({ saleId, productId, quantity }) => {
   return {
     code: 200,
     data: {
-      saleId,
-      itemUpdated: [...result],
+      saleId: id,
+      itemUpdated: [result],
     },
   };
 };

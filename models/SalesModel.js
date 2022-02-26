@@ -63,7 +63,7 @@ const createSalesProducts = async ({ saleId, productId, quantity }) => {
   return {};
 };
 
-const update = async ({ saleId, productId, quantity }) => {
+const update = async ({ id, productId, quantity }) => {
   const query = `
     UPDATE
       StoreManager.sales_products 
@@ -72,9 +72,9 @@ const update = async ({ saleId, productId, quantity }) => {
     WHERE
       sale_id = ? AND product_id = ?;`;
 
-  const [result] = await connection.execute(query, [quantity, saleId, productId]);
+  const [result] = await connection.execute(query, [quantity, id, productId]);
 
-  return result.affectedRows === 0 ? null : { saleId, productId, quantity };
+  return result.affectedRows === 0 ? null : { productId, quantity };
 };
 
 module.exports = {
