@@ -1,4 +1,8 @@
 const SalesModel = require('../models/SalesModel');
+const ProductsModel = require('../models/ProductsModel');
+const ProductsService = require('./ProductsService');
+const addInventory = require('../utils/addInventory');
+const validateProduct = require('../utils/validateProduct');
 
 const getAll = async () => {
   const result = await SalesModel.getAll();
@@ -33,23 +37,28 @@ const getById = async (id) => {
 };
 
 const create = async (sales) => {
-  const saleId = await SalesModel.createSale();
+  /* 
+    Validate if the products in the "sales" array exists
+    and if the inventory quantity subtratected sale quantity is greater than 0
+  */
+  const { productError, quantityError, products } = await validateProduct(sales);
 
-  if (typeof saleId !== 'number') {
-    return { code: 400, message: 'Bad request' };
+  if (productError.message || quantityError.message) {
+    return quantityError.message ? quantityError : productError;
   }
 
-  sales.forEach(async ({ productId, quantity }) => {
-    await SalesModel.createSalesProducts({ saleId, productId, quantity });
-  });
+  const saleId = await SalesModel.createSale();
 
-  return {
-    code: 201,
-    data: {
-      id: saleId,
-      itemsSold: sales,
-    },
-  };
+  await Promise.all(
+    sales.map(async ({ productId, quantity }, index) => {
+      const newQuantity = products[index].quantity - quantity;
+
+      await ProductsModel.updateQuantity({ productId, quantity: newQuantity });
+      await SalesModel.createSalesProducts({ saleId, productId, quantity });
+    }),
+  );
+
+  return { code: 201, data: { id: saleId, itemsSold: sales } };
 };
 
 const update = async ({ id, productId, quantity }) => {
@@ -72,6 +81,12 @@ const update = async ({ id, productId, quantity }) => {
 };
 
 const deleteSale = async (id) => {
+  const getSalesById = await getById(id);
+
+  if (getSalesById.message) return getSalesById;
+
+  await addInventory(getSalesById.data);
+
   const result = await SalesModel.deleteSale(id);
 
   if (!result) {
