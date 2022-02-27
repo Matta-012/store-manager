@@ -1,6 +1,5 @@
 const SalesModel = require('../models/SalesModel');
 const ProductsModel = require('../models/ProductsModel');
-const ProductsService = require('./ProductsService');
 const addInventory = require('../utils/addInventory');
 const validateProduct = require('../utils/validateProduct');
 
