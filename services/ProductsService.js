@@ -53,7 +53,7 @@ const create = async ({ name, quantity }) => {
 const update = async ({ id, name, quantity }) => {
   const result = await ProductsModel.update({ id, name, quantity });
 
-  if (result.affectedRows === 0) {
+  if (!result) {
     return {
       code: 404,
       message: 'Product not found',
@@ -69,7 +69,7 @@ const update = async ({ id, name, quantity }) => {
 const deleteProduct = async (id) => {
   const result = await ProductsModel.deleteProduct(id);
 
-  if (result.affectedRows === 0) {
+  if (!result) {
     return {
       code: 404,
       message: 'Product not found',

@@ -1,20 +1,17 @@
-const camelcaseKeys = require('camelcase-keys');
 const connection = require('./connection');
 
 const getAll = async () => {
   const query = 'SELECT id, name, quantity FROM StoreManager.products ORDER BY id;';
   const [result] = await connection.execute(query);
 
-  const serialize = camelcaseKeys(result);
-  return serialize;
+  return result;
 };
 
 const getById = async (id) => {
   const query = 'SELECT id, name, quantity FROM StoreManager.products WHERE id = ? ORDER BY id;';
   const [result] = await connection.execute(query, [id]);
 
-  const serialize = camelcaseKeys(result);
-  return serialize[0];
+  return result[0];
 };
 
 const getByName = async (name) => {
@@ -39,21 +36,22 @@ const update = async ({ id, name, quantity }) => {
   const query = 'UPDATE StoreManager.products SET name = ?, quantity = ? WHERE id = ?;';
   const [result] = await connection.execute(query, [name, quantity, id]);
 
-  return result.affectedRows === 0 ? result : { id, name, quantity };
+  return result.affectedRows === 0 ? null : { id, name, quantity };
 };
 
 const updateQuantity = async ({ productId, quantity }) => {
   const query = 'UPDATE StoreManager.products SET quantity = ? WHERE id = ?;';
   const [result] = await connection.execute(query, [quantity, productId]);
 
-  return result.affectedRows === 0;
+  return result.affectedRows !== 0;
 };
 
 const deleteProduct = async (id) => {
   const query = 'DELETE FROM StoreManager.products WHERE id = ?;';
   const [result] = await connection.execute(query, [id]);
+  console.log(result);
 
-  return result.affectedRows === 0 ? result : {};
+  return result.affectedRows !== 0;
 };
 
 module.exports = {
