@@ -112,6 +112,28 @@ describe('Products Model tests', () => {
   });
 
   describe('Create new Product', () => {
+    describe('When creating a new product', () => {
+      const createResponse = [
+        { "id": 4, "name": 'xablau', "quantity": 10 },
+      ];
+
+      const name = 'xablau';
+
+      before(() => {
+        sinon.stub(connection, 'execute').resolves(createResponse);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('Should return an array with an object if the product exits', async () => {
+        const modelResponse = await ProductsModel.getByName(name);
+
+        expect(modelResponse).to.be.false;
+      });
+    });
+
     describe('When the new product is created', () => {
       const createResponse = [
         {
