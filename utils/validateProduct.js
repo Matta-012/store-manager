@@ -1,11 +1,10 @@
 const ProductsService = require('../services/ProductsService');
 
-module.exports = async (sales) => {
+const validateProduct = async (sales) => {
   const validation = {
     productError: {},
     quantityError: {},
-    products: [],
-  };
+    products: [] };
 
   await Promise.all(
     sales.map(async ({ productId, quantity }) => {
@@ -13,8 +12,11 @@ module.exports = async (sales) => {
 
       validation.products.push(product.data);
   
-      if (product.message) validation.productError = product;
-  
+      if (product.message) {
+        validation.productError = product;
+        return validation;
+      }
+
       if (product.data.quantity - quantity < 0) {
         validation.quantityError = { code: 422, message: 'Such amount is not permitted to sell' };
       }
@@ -23,3 +25,5 @@ module.exports = async (sales) => {
 
   return validation;
 };
+
+module.exports = { validateProduct };

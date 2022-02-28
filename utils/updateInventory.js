@@ -1,6 +1,6 @@
 const { ProductsModel } = require('../models');
 
-module.exports = async (id, quantity, salesQuantity) => {
+const updateInventory = async (id, quantity, salesQuantity) => {
   const product = await ProductsModel.getById(id);
 
   const productUpdate = {
@@ -20,3 +20,5 @@ module.exports = async (id, quantity, salesQuantity) => {
 
   return productUpdate;
 };
+
+module.exports = { updateInventory };

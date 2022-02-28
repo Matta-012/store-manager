@@ -1,8 +1,8 @@
 const SalesModel = require('../models/SalesModel');
 const ProductsModel = require('../models/ProductsModel');
-const addInventory = require('../utils/addInventory');
-const validateProduct = require('../utils/validateProduct');
-const updateInventory = require('../utils/updateInventory');
+const { addInventory } = require('../utils/addInventory');
+const { validateProduct } = require('../utils/validateProduct');
+const { updateInventory } = require('../utils/updateInventory');
 
 const getAll = async () => {
   const result = await SalesModel.getAll();
@@ -39,7 +39,7 @@ const getById = async (id) => {
 const create = async (sales) => {
   /* 
     Validate if the products in the "sales" array exists
-    and if the inventory quantity subtratected sale quantity is greater than 0
+    and if the inventory quantity subtractected sale quantity is greater than 0
   */
   const { productError, quantityError, products } = await validateProduct(sales);
 
