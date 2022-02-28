@@ -2,6 +2,7 @@ const SalesModel = require('../models/SalesModel');
 const ProductsModel = require('../models/ProductsModel');
 const addInventory = require('../utils/addInventory');
 const validateProduct = require('../utils/validateProduct');
+const updateInventory = require('../utils/updateInventory');
 
 const getAll = async () => {
   const result = await SalesModel.getAll();
@@ -61,14 +62,17 @@ const create = async (sales) => {
 };
 
 const update = async ({ id, productId, quantity }) => {
-  const result = await SalesModel.update({ id, productId, quantity });
+  const sales = await SalesModel.getByIdAndProductId({ id, productId });
 
-  if (!result) {
-    return {
-      code: 404,
-      message: 'Sale not found',
-    };
-  }
+  if (!sales) return { code: 404, message: 'Sale not found' };
+
+  const updateResult = await updateInventory(id, quantity, sales.quantity);
+
+  if (updateResult.message) return { code: updateResult.code, message: updateResult.message };
+
+  await ProductsModel.updateQuantity({ productId, quantity: updateResult.newQuantity });
+
+  const result = await SalesModel.update({ id, productId, quantity });
 
   return {
     code: 200,

@@ -230,4 +230,103 @@ describe('Products Service tests', () => {
       });
     });
   });
+
+  describe('Update a Product', () => {
+    const updateResponse = {
+      "id": 1,
+      "name": "produto A",
+      "quantity": 10
+    };
+
+    describe('When the product is updated', () => {
+
+      before(() => {
+        sinon.stub(ProductsModel, 'update').resolves(updateResponse);
+      });
+
+      after(() => {
+        ProductsModel.update.restore();
+      });
+
+      it('Should return status code "200"', async () => {
+        const serviceResponse = await ProductsService.update(updateResponse);
+
+        expect(serviceResponse.code).to.be.equal(200);
+      });
+
+      it('Should return an object with the following keys: "code", "data"', async () => {
+        const serviceResponse = await ProductsService.update(updateResponse);
+
+        expect(serviceResponse).to.include.all.keys('code', 'data');
+      });
+
+      it('Should return an object deep equal the product updated', async () => {
+        const serviceResponse = await ProductsService.update(updateResponse);
+
+        expect(serviceResponse.data).to.be.deep.equal(updateResponse);
+      });
+    });
+
+    describe('When the product is not found', () => {
+      before(() => {
+        sinon.stub(ProductsModel, 'update').resolves(null);
+      });
+
+      after(() => {
+        ProductsModel.update.restore();
+      });
+
+      it('Should return with status code "404"', async () => {
+        const serviceResponse = await ProductsService.update(updateResponse);
+
+        expect(serviceResponse.code).to.be.equal(404);
+      });
+
+      it('Should return with error message "Product not found"', async () => {
+        const serviceResponse = await ProductsService.update(updateResponse);
+
+        expect(serviceResponse.message).to.be.equal('Product not found');
+      });
+    });
+  });
+
+  describe('Delete a Product', () => {
+    describe('When the product is deleted', () => {
+      before(() => {
+        sinon.stub(ProductsModel, 'deleteProduct').resolves(true);
+      });
+
+      after(() => {
+        ProductsModel.deleteProduct.restore();
+      });
+
+      it('Should return status code "204"', async () => {
+        const serviceResponse = await ProductsService.deleteProduct(1);
+
+        expect(serviceResponse.code).to.be.equal(204);
+      });
+    });
+
+    describe('When the product is not deleted', () => {
+      before(() => {
+        sinon.stub(ProductsModel, 'deleteProduct').resolves(false);
+      });
+
+      after(() => {
+        ProductsModel.deleteProduct.restore();
+      });
+
+      it('Should return with status code "404"', async () => {
+        const serviceResponse = await ProductsService.deleteProduct(1);
+
+        expect(serviceResponse.code).to.be.equal(404);
+      });
+
+      it('Should return with error message "Product not found"', async () => {
+        const serviceResponse = await ProductsService.deleteProduct(1);
+
+        expect(serviceResponse.message).to.be.equal('Product not found');
+      });
+    });
+  });
 });

@@ -165,4 +165,158 @@ describe('Products Model tests', () => {
       });
     });
   });
+
+  describe('Update a product', () => {
+    describe('When the product is updated', () => {
+      const updateResponse = [
+        {
+          "affectedRows": 1,
+        },
+      ];
+
+      const result = {
+        "id": 4, "name": 'xablau', "quantity": 10,
+      };
+
+      before(() => {
+        sinon.stub(connection, 'execute').resolves(updateResponse);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('Should return the following object', async () => {
+        const modelResponse = await ProductsModel.update(result);
+
+        expect(modelResponse).to.be.deep.equal(result);
+      });
+    });
+
+    describe('When the product is not updated', () => {
+      const updateResponse = [
+        {
+          "affectedRows": 0,
+        },
+      ];
+
+      const input = {
+        "id": 4, "name": 'xablau', "quantity": 10,
+      };
+
+      before(() => {
+        sinon.stub(connection, 'execute').resolves(updateResponse);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('Should return null', async () => {
+        const modelResponse = await ProductsModel.update(input);
+
+        expect(modelResponse).to.be.null;
+      });
+    });
+  });
+
+  describe('Update a product Quantity', () => {
+    describe('When the product quantity is updated', () => {
+      const updateResponse = [
+        {
+          "affectedRows": 1,
+        },
+      ];
+
+      const input = {
+        "productId": 2, "quantity": 10,
+      };
+
+      before(() => {
+        sinon.stub(connection, 'execute').resolves(updateResponse);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('Should return true', async () => {
+        const modelResponse = await ProductsModel.updateQuantity(input);
+
+        expect(modelResponse).to.be.true;
+      });
+    });
+
+    describe('When the product quantity is not updated', () => {
+      const updateResponse = [
+        {
+          "affectedRows": 0,
+        },
+      ];
+
+      const input = {
+        "productId": 2, "quantity": 10,
+      };
+
+      before(() => {
+        sinon.stub(connection, 'execute').resolves(updateResponse);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('Should return false', async () => {
+        const modelResponse = await ProductsModel.updateQuantity(input);
+
+        expect(modelResponse).to.be.false;
+      });
+    });
+  });
+
+  describe('Delete a product', () => {
+    describe('When the product is deleted', () => {
+      const deleteResponse = [
+        {
+          "affectedRows": 1,
+        },
+      ];
+
+      before(() => {
+        sinon.stub(connection, 'execute').resolves(deleteResponse);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('Should return true', async () => {
+        const modelResponse = await ProductsModel.deleteProduct(1);
+
+        expect(modelResponse).to.be.true;
+      });
+    });
+
+    describe('When the product is not deleted', () => {
+      const deleteResponse = [
+        {
+          "affectedRows": 0,
+        },
+      ];
+
+      before(() => {
+        sinon.stub(connection, 'execute').resolves(deleteResponse);
+      });
+
+      after(() => {
+        connection.execute.restore();
+      });
+
+      it('Should return false', async () => {
+        const modelResponse = await ProductsModel.deleteProduct(1);
+
+        expect(modelResponse).to.be.false;
+      });
+    });
+  });
 });
