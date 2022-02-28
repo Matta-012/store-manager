@@ -82,7 +82,7 @@ const createSalesProducts = async ({ saleId, productId, quantity }) => {
   
   await connection.execute(query, [saleId, productId, quantity]);
 
-  return {};
+  return null;
 };
 
 const update = async ({ id, productId, quantity }) => {
@@ -103,7 +103,7 @@ const deleteSale = async (id) => {
   const query = 'DELETE FROM StoreManager.sales WHERE id = ?;';
   const [result] = await connection.execute(query, [id]);
 
-  return result.affectedRows === 0 ? null : {};
+  return result.affectedRows !== 0;
 };
 
 module.exports = {
