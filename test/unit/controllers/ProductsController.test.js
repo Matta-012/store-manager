@@ -11,7 +11,8 @@ describe('Products Controller tests', () => {
 
   before(() => {
     response.status = sinon.stub().returns(response);
-    response.json = sinon.stub().returns()
+    response.json = sinon.stub().returns();
+    response.end = sinon.stub().returns();
     next = sinon.stub().returns();
   });
 
@@ -206,6 +207,121 @@ describe('Products Controller tests', () => {
         await ProductsController.create(request, response, next);
 
         expect(response.json.calledWith({ message: controllerResponse.message })).to.be.true;
+      });
+    });
+  });
+
+  describe('Update a Product', () => {
+    describe('When the product is updated', () => {
+      const serviceResponse = {
+        code: 200,
+        data: {
+          "id": 1,
+          "name": "produto A",
+          "quantity": 10
+        },
+      };
+
+      before(() => {
+        request.params = { id: 1 };
+        request.body = { "name": "produto A", "quantity": 10 };
+        sinon.stub(ProductsService, 'update').resolves(serviceResponse);
+      });
+
+      after(() => {
+        ProductsService.update.restore();
+      });
+
+      it('Should respond with status code "200"', async () => {
+        await ProductsController.update(request, response, next);
+
+        expect(response.status.calledWith(serviceResponse.code)).to.be.true;
+      });
+
+      it('Response json should return expected data from database', async () => {
+        await ProductsController.update(request, response, next);
+
+        expect(response.json.calledWith(serviceResponse.data)).to.be.true;
+      });
+    });
+
+    describe('When the product is not found', () => {
+      const serviceResponse = {
+        code: 404,
+        message: 'Product not found',
+      };
+
+      before(() => {
+        request.params = { id: 1 };
+        request.body = { "name": "produto A", "quantity": 10 };
+        sinon.stub(ProductsService, 'update').resolves(serviceResponse);
+      });
+
+      after(() => {
+        ProductsService.update.restore();
+      });
+
+      it('Should respond with status code "404"', async () => {
+        await ProductsController.update(request, response, next);
+
+        expect(response.status.calledWith(serviceResponse.code)).to.be.true;
+      });
+
+      it('Response json should return error message "Product not found"', async () => {
+        await ProductsController.update(request, response, next);
+
+        expect(response.json.calledWith({ message: serviceResponse.message })).to.be.true;
+      });
+    });
+  });
+
+  describe('Delete a Product', () => {
+    describe('When the product is deleted', () => {
+      const serviceResponse = {
+        code: 204,
+      };
+
+      before(() => {
+        request.params = { id: 1 };
+        sinon.stub(ProductsService, 'deleteProduct').resolves(serviceResponse);
+      });
+
+      after(() => {
+        ProductsService.deleteProduct.restore();
+      });
+
+      it('Should respond with status code "204"', async () => {
+        await ProductsController.deleteProduct(request, response, next);
+
+        expect(response.status.calledWith(serviceResponse.code)).to.be.true;
+      });
+    });
+
+    describe('When the product is not found', () => {
+      const serviceResponse = {
+        code: 404,
+        message: 'Product not found',
+      };
+
+      before(() => {
+        request.params = { id: 1 };
+        sinon.stub(ProductsService, 'deleteProduct').resolves(serviceResponse);
+      });
+
+      after(() => {
+        ProductsService.deleteProduct.restore();
+      });
+
+      it('Should respond with status code "404"', async () => {
+        await ProductsController.deleteProduct(request, response, next);
+
+        expect(response.status.calledWith(serviceResponse.code)).to.be.true;
+      });
+
+      it('Response json should return error message "Product not found"', async () => {
+        await ProductsController.deleteProduct(request, response, next);
+
+        expect(response.json.calledWith({ message: serviceResponse.message })).to.be.true;
       });
     });
   });
