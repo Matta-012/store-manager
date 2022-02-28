@@ -22,6 +22,28 @@ const getAll = async () => {
   return serialize;
 };
 
+const getByIdAndProductId = async ({ id, productId }) => {
+  const query = `
+  SELECT
+    SP.product_id,
+    SP.quantity,
+    S.date
+  FROM
+    StoreManager.sales_products AS SP
+  INNER JOIN
+    StoreManager.sales AS S
+    ON S.id = SP.sale_id
+  WHERE
+    SP.sale_id = ? AND SP.product_id = ?
+  ORDER BY
+    SP.sale_id, SP.sale_id;`;
+
+  const [result] = await connection.execute(query, [id, productId]);
+
+  const serialize = camelcaseKeys(result);
+  return serialize.length > 0 ? serialize[0] : null;
+};
+
 const getById = async (id) => {
   const query = `
   SELECT
@@ -87,6 +109,7 @@ const deleteSale = async (id) => {
 module.exports = {
   getAll,
   getById,
+  getByIdAndProductId,
   createSale,
   createSalesProducts,
   update,
