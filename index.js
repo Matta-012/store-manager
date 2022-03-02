@@ -21,5 +21,5 @@ app.use('/sales', salesRoutes);
 app.use(errorMiddleware);
 
 app.listen(process.env.PORT, () => {
-  console.log(`Escutando na porta ${process.env.PORT}`);
+  console.log(`Listening on port ${process.env.PORT}`);
 });
